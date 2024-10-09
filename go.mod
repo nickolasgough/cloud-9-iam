@@ -1,4 +1,4 @@
-module github.com/nickolasgough/cloud-community-server
+module github.com/nickolasgough/cloud-community-iam
 
 go 1.23.2
 

@@ -1,6 +1,5 @@
 # Sensitive project files
-google-client-data.json
-env-setup.sh
+/sensitive
 
 # System files
 .DS_Store
