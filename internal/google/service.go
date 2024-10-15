@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/nickolasgough/cloud-community-iam/internal/shared/ierrors"
+	usermodel "github.com/nickolasgough/cloud-community-iam/internal/user"
 )
 
 const (
@@ -13,7 +14,7 @@ const (
 )
 
 type Service interface {
-	VerifySignInRequest(ctx context.Context, req *http.Request) error
+	VerifySignInRequest(ctx context.Context, req *http.Request) (*usermodel.User, error)
 }
 
 type service struct {
@@ -21,32 +22,37 @@ type service struct {
 	googleIDVerfier GoogleIDVerifier
 }
 
-func NewService(gac string, giv GoogleIDVerifier) Service {
+func NewService(gaci string, giv GoogleIDVerifier) Service {
 	return &service{
-		gcpAuthClientID: gac,
+		gcpAuthClientID: gaci,
 		googleIDVerfier: giv,
 	}
 }
 
-func (s *service) VerifySignInRequest(ctx context.Context, req *http.Request) error {
+func (s *service) VerifySignInRequest(ctx context.Context, req *http.Request) (*usermodel.User, error) {
 	err := s.verifyCSRFTokens(req)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = req.ParseForm()
 	if err != nil {
-		return ierrors.NewError(ierrors.BadRequest, err)
+		return nil, ierrors.NewError(ierrors.BadRequest, err)
 	}
 	googleJWT := req.Form.Get("credential")
 	if googleJWT == "" {
-		return ierrors.NewError(ierrors.Unauthorized, err)
+		return nil, ierrors.NewError(ierrors.Unauthorized, err)
 	}
-	_, err = s.googleIDVerfier.Validate(ctx, googleJWT, s.gcpAuthClientID)
+	payload, err := s.googleIDVerfier.Validate(ctx, googleJWT, s.gcpAuthClientID)
 	if err != nil {
-		return ierrors.NewError(ierrors.Forbidden, err)
+		return nil, ierrors.NewError(ierrors.Forbidden, err)
 	}
-	return nil
+
+	user, err := extractUserFromJWTClaims(payload.Claims)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 func (s *service) verifyCSRFTokens(req *http.Request) error {
@@ -74,4 +80,22 @@ func (s *service) verifyCSRFTokens(req *http.Request) error {
 		return ierrors.NewError(ierrors.BadRequest, err)
 	}
 	return nil
+}
+
+func extractUserFromJWTClaims(jwtClaims map[string]interface{}) (*usermodel.User, error) {
+	firstName := jwtClaims["given_name"].(string)
+	lastName := jwtClaims["family_name"].(string)
+	displayName := jwtClaims["name"].(string)
+	displayImageURL := jwtClaims["picture"].(string)
+	email := jwtClaims["email"].(string)
+	if displayName == "" || email == "" {
+		return nil, ierrors.NewError(ierrors.InvalidArgument, errors.New("display name and email are required"))
+	}
+	return &usermodel.User{
+		FirstName:       firstName,
+		LastName:        lastName,
+		DisplayName:     displayName,
+		DisplayImageURL: displayImageURL,
+		Email:           email,
+	}, nil
 }

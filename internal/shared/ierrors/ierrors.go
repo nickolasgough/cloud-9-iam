@@ -12,6 +12,8 @@ const (
 	Unauthorized ErrType = "Unauthorized"
 	Forbidden            = "Forbidden"
 	BadRequest           = "BadRequest"
+
+	InvalidArgument = "InvalidArgument"
 )
 
 func NewError(errType ErrType, err error) error {
@@ -47,6 +49,8 @@ func ToHttpStatusCode(err error) int {
 		return http.StatusForbidden
 	case BadRequest:
 		return http.StatusBadRequest
+	case InvalidArgument:
+		return http.StatusInternalServerError
 	default:
 		return http.StatusInternalServerError
 	}

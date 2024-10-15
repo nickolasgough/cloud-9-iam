@@ -9,6 +9,7 @@ import (
 	"google.golang.org/api/idtoken"
 
 	"github.com/nickolasgough/cloud-community-iam/internal/api"
+	"github.com/nickolasgough/cloud-community-iam/internal/auth"
 	"github.com/nickolasgough/cloud-community-iam/internal/google"
 	"github.com/nickolasgough/cloud-community-iam/internal/shared/constants"
 )
@@ -22,9 +23,10 @@ func main() {
 	mux := http.NewServeMux()
 
 	// Initialize environment data.
-	gcpAuthClientID := os.Getenv(constants.GCP_OAUTH_CLIENT_ID_ENV_VAR)
-	if gcpAuthClientID == "" {
-		fmt.Printf("Failed to load GCP_OAUTH_CLIENT_ID environment variable\n")
+	gcpClientID := os.Getenv(constants.GCP_CLIENT_ID)
+	gcpClientSecret := os.Getenv(constants.GCP_CLIENT_SECRET)
+	if gcpClientID == "" || gcpClientSecret == "" {
+		fmt.Printf("Failed to load GCP_CLIENT_ID and/or GCP_CLIENT_SECRET environment variable\n")
 		os.Exit(1)
 	}
 
@@ -34,10 +36,13 @@ func main() {
 		fmt.Printf("Failed to initialize Google ID validator client")
 		os.Exit(1)
 	}
-	googleService := google.NewService(gcpAuthClientID, googleIDVerifier)
+	googleService := google.NewService(gcpClientID, googleIDVerifier)
+
+	// Initialize the Authentication service
+	authService := auth.NewService(gcpClientSecret)
 
 	// Register API endpoints.
-	mux.HandleFunc("/sign-in/with-google", api.SignInWithGoogle(ctx, googleService))
+	mux.HandleFunc("/sign-in/with-google", api.SignInWithGoogle(ctx, gcpClientSecret, googleService, authService))
 
 	fmt.Printf("Server listening on port %d\n", PORT)
 	err = http.ListenAndServe(fmt.Sprintf(":%d", PORT), mux)
