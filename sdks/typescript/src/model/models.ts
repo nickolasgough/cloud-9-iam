@@ -1,1 +1,1 @@
-export * from './signInWithPasswordRequest';
+export * from './credentials';

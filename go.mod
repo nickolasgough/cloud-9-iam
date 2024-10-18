@@ -1,4 +1,4 @@
-module github.com/nickolasgough/cloud-community-iam
+module github.com/nickolasgough/cloud-9-iam
 
 go 1.23.2
 

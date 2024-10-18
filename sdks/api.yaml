@@ -2,38 +2,61 @@ openapi: 3.0.0
 servers:
   - url: http://localhost:8000
 tags:
-  - name: IAM
+  - name: iam
     description: Service for IAM related requests
 info:
   description: This defines the cloud-community-iam API
-  version: 0.0.1-rc1
+  version: 0.0.1-rc2
   title: Cloud Community IAM API
 paths:
+  /create-account:
+    post:
+      summary: Create a new account with an email and password
+      tags:
+        - iam
+      operationId: createAccount
+      responses:
+        "200":
+          description: Account created successfully
+        "400":
+          description: Request is malformed
+      requestBody:
+        $ref: "#/components/requestBodies/CreateAccount"
   /sign-in/with-password:
     post:
       summary: Sign-in using an email and password
       tags:
-        - IAM
+        - iam
       operationId: signInWithPassword
       responses:
         "200":
           description: Successful operation
+        "404":
+          description: User not found
       requestBody:
         $ref: "#/components/requestBodies/SignInWithPassword"
 components:
+  schemas:
+    Credentials:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+      required:
+        - email
+        - password
   requestBodies:
+    CreateAccount:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Credentials"
     SignInWithPassword:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              email:
-                type: string
-                format: email
-              password:
-                type: string
-                format: password
-            required:
-              - email
-              - password
+            $ref: "#/components/schemas/Credentials"

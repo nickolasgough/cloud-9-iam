@@ -1,8 +1,8 @@
-## @cloud-community/iam@0.0.1-rc1
+## @cloud-community/iam@0.0.1-rc2
 
 This defines the cloud-community-iam API
 
-The version of the OpenAPI document: 0.0.1-rc1
+The version of the OpenAPI document: 0.0.1-rc2
 
 ### Building
 
@@ -23,7 +23,7 @@ Navigate to the folder of your consuming project and run one of next commands.
 _published:_
 
 ```
-npm install @cloud-community/iam@0.0.1-rc1 --save
+npm install @cloud-community/iam@0.0.1-rc2 --save
 ```
 
 _without publishing (not recommended):_

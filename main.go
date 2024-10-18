@@ -9,10 +9,10 @@ import (
 
 	"google.golang.org/api/idtoken"
 
-	"github.com/nickolasgough/cloud-community-iam/internal/api"
-	"github.com/nickolasgough/cloud-community-iam/internal/auth"
-	"github.com/nickolasgough/cloud-community-iam/internal/google"
-	"github.com/nickolasgough/cloud-community-iam/internal/shared/constants"
+	"github.com/nickolasgough/cloud-9-iam/internal/api"
+	"github.com/nickolasgough/cloud-9-iam/internal/auth"
+	"github.com/nickolasgough/cloud-9-iam/internal/google"
+	"github.com/nickolasgough/cloud-9-iam/internal/shared/constants"
 )
 
 const (

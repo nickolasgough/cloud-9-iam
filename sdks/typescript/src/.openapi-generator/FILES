@@ -3,13 +3,13 @@
 README.md
 api.module.ts
 api/api.ts
-api/iAM.service.ts
+api/iam.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
 index.ts
+model/credentials.ts
 model/models.ts
-model/signInWithPasswordRequest.ts
 ng-package.json
 package.json
 param.ts

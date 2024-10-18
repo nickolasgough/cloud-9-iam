@@ -1,3 +1,3 @@
-export * from './iAM.service';
-import { IAMService } from './iAM.service';
-export const APIS = [IAMService];
+export * from './iam.service';
+import { IamService } from './iam.service';
+export const APIS = [IamService];

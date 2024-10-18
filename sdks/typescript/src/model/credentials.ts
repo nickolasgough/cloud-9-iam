@@ -9,7 +9,7 @@
  */
 
 
-export interface SignInWithPasswordRequest { 
+export interface Credentials { 
     email: string;
     password: string;
 }

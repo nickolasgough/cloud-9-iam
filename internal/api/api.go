@@ -14,6 +14,12 @@ import (
 
 type HandlerFn func(http.ResponseWriter, *http.Request)
 
+func CreateAccount(ctx context.Context, gcpClientSecret string, authService auth.Service) HandlerFn {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+	}
+}
+
 func SignInWithGoogle(ctx context.Context, gcpClientSecret string, googleService google.Service, authService auth.Service) HandlerFn {
 	return func(w http.ResponseWriter, r *http.Request) {
 		user, err := googleService.VerifySignInRequest(ctx, r)
