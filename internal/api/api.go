@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/nickolasgough/cloud-community-iam/internal/auth"
 	"github.com/nickolasgough/cloud-community-iam/internal/google"
-	"github.com/nickolasgough/cloud-community-iam/internal/shared/constants"
 	"github.com/nickolasgough/cloud-community-iam/internal/shared/ierrors"
 	"github.com/nickolasgough/cloud-community-iam/internal/shared/utils"
 )
@@ -34,13 +34,16 @@ func SignInWithGoogle(ctx context.Context, gcpClientSecret string, googleService
 			w.Write([]byte(statusText))
 			return
 		}
+		expiry := time.Now().Add(30 * 24 * time.Hour)
 		http.SetCookie(w, &http.Cookie{
 			Name:     "session",
 			Value:    jwtString,
-			Domain:   constants.CLIENT_DOMAIN,
-			Secure:   true,
+			Domain:   "localhost",
+			Path:     "/",
 			HttpOnly: true,
+			Secure:   false,
 			SameSite: http.SameSiteDefaultMode,
+			Expires:  expiry,
 		})
 		http.Redirect(w, r, utils.BuildClientURL("/home"), http.StatusPermanentRedirect)
 	}

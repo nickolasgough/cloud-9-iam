@@ -5,5 +5,7 @@ const (
 	GCP_CLIENT_SECRET = "GCP_CLIENT_SECRET"
 
 	CLIENT_DOMAIN   = "localhost:4200"
-	CLIENT_BASE_URL = "https://localhost:4200"
+	CLIENT_BASE_URL = "http://localhost:4200"
+
+	SERVER_DOMAIN = "localhost:8000"
 )

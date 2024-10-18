@@ -1,0 +1,39 @@
+openapi: 3.0.0
+servers:
+  - url: http://localhost:8000
+tags:
+  - name: IAM
+    description: Service for IAM related requests
+info:
+  description: This defines the cloud-community-iam API
+  version: 0.0.1-rc1
+  title: Cloud Community IAM API
+paths:
+  /sign-in/with-password:
+    post:
+      summary: Sign-in using an email and password
+      tags:
+        - IAM
+      operationId: signInWithPassword
+      responses:
+        "200":
+          description: Successful operation
+      requestBody:
+        $ref: "#/components/requestBodies/SignInWithPassword"
+components:
+  requestBodies:
+    SignInWithPassword:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                type: string
+                format: email
+              password:
+                type: string
+                format: password
+            required:
+              - email
+              - password
