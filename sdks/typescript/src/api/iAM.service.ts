@@ -1,5 +1,5 @@
 /**
- * Cloud Community IAM API
+ * Cloud 9 IAM API
  *
  * 
  *

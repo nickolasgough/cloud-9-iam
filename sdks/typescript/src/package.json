@@ -1,7 +1,7 @@
 {
-  "name": "@cloud-community/iam",
-  "version": "0.0.1-rc2",
-  "description": "OpenAPI client for @cloud-community/iam",
+  "name": "@cloud-9/iam",
+  "version": "0.0.0-rc1",
+  "description": "OpenAPI client for @cloud-9/iam",
   "author": "OpenAPI-Generator Contributors",
   "repository": {
     "type": "git",

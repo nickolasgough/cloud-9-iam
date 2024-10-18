@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/nickolasgough/cloud-community-iam/internal/auth"
-	"github.com/nickolasgough/cloud-community-iam/internal/google"
-	"github.com/nickolasgough/cloud-community-iam/internal/shared/ierrors"
-	"github.com/nickolasgough/cloud-community-iam/internal/shared/utils"
+	"github.com/nickolasgough/cloud-9-iam/internal/auth"
+	"github.com/nickolasgough/cloud-9-iam/internal/google"
+	"github.com/nickolasgough/cloud-9-iam/internal/shared/ierrors"
+	"github.com/nickolasgough/cloud-9-iam/internal/shared/utils"
 )
 
 type HandlerFn func(http.ResponseWriter, *http.Request)

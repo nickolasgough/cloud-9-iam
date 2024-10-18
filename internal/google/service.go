@@ -5,8 +5,8 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/nickolasgough/cloud-community-iam/internal/shared/ierrors"
-	usermodel "github.com/nickolasgough/cloud-community-iam/internal/user"
+	"github.com/nickolasgough/cloud-9-iam/internal/shared/ierrors"
+	usermodel "github.com/nickolasgough/cloud-9-iam/internal/user"
 )
 
 const (

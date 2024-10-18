@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/nickolasgough/cloud-community-iam/internal/shared/constants"
+	"github.com/nickolasgough/cloud-9-iam/internal/shared/constants"
 )
 
 func BuildClientURL(path string) string {
