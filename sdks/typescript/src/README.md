@@ -1,8 +1,8 @@
-## @cloud-9/iam@0.0.0-rc1
+## @cloud-9/iam@0.0.0-rc2
 
-This defines the cloud-community-iam API
+This defines the cloud-9-iam API
 
-The version of the OpenAPI document: 0.0.0-rc1
+The version of the OpenAPI document: 0.0.0-rc2
 
 ### Building
 
@@ -23,7 +23,7 @@ Navigate to the folder of your consuming project and run one of next commands.
 _published:_
 
 ```
-npm install @cloud-9/iam@0.0.0-rc1 --save
+npm install @cloud-9/iam@0.0.0-rc2 --save
 ```
 
 _without publishing (not recommended):_

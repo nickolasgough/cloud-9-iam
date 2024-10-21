@@ -6,13 +6,8 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/nickolasgough/cloud-9-iam/internal/shared/ierrors"
-	usermodel "github.com/nickolasgough/cloud-9-iam/internal/user"
+	usermodel "github.com/nickolasgough/cloud-9-iam/internal/user/model"
 )
-
-type Service interface {
-	CreateJWT(*usermodel.User) (string, error)
-	ValidateJWT(string) error
-}
 
 type service struct {
 	gcpClientSecret string

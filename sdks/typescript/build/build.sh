@@ -16,7 +16,7 @@ echo "Compiling TypeScript files..."
 npm install
 npm run build
 
-echo "Publish the SDK..."
+echo "Publishing the SDK..."
 cd ./dist
 npm publish --access public
 

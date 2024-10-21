@@ -1,11 +1,14 @@
 package constants
 
 const (
+	CLIENT_DOMAIN   = "localhost:4200"
+	CLIENT_BASE_URL = "http://localhost:4200"
+
 	GCP_CLIENT_ID     = "GCP_CLIENT_ID"
 	GCP_CLIENT_SECRET = "GCP_CLIENT_SECRET"
 
-	CLIENT_DOMAIN   = "localhost:4200"
-	CLIENT_BASE_URL = "http://localhost:4200"
+	PSQL_USERNAME = "PSQL_USERNAME"
+	PSQL_PASSWORD = "PSQL_PASSWORD"
 
 	SERVER_DOMAIN = "localhost:8000"
 )

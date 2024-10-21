@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/nickolasgough/cloud-9-iam/internal/shared/ierrors"
-	usermodel "github.com/nickolasgough/cloud-9-iam/internal/user"
+	usermodel "github.com/nickolasgough/cloud-9-iam/internal/user/model"
 )
 
 const (
@@ -14,7 +14,7 @@ const (
 )
 
 type Service interface {
-	VerifySignInRequest(ctx context.Context, req *http.Request) (*usermodel.User, error)
+	VerifySignInRequest(context.Context, *http.Request) (*usermodel.User, error)
 }
 
 type service struct {

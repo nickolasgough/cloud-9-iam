@@ -1,6 +1,6 @@
 {
   "name": "@cloud-9/iam",
-  "version": "0.0.0-rc1",
+  "version": "0.0.0-rc2",
   "description": "OpenAPI client for @cloud-9/iam",
   "author": "OpenAPI-Generator Contributors",
   "repository": {
