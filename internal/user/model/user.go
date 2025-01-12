@@ -2,21 +2,25 @@ package usermodel
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 )
 
-type User struct {
-	ID              string
-	FirstName       string
-	LastName        string
-	DisplayName     string
-	DisplayImageURL string
-	Email           string
-	Password        string
+const (
+	UsersTable = "users"
+)
 
-	Created time.Time
-	Updated time.Time
-	Deleted time.Time
+type User struct {
+	ID              string `json:"id"`
+	FirstName       string `json:"firstName"`
+	LastName        string `json:"lastName"`
+	DisplayName     string `json:"displayName"`
+	DisplayImageURL string `json:"displayImageURL"`
+	Email           string `json:"email"`
+
+	Created time.Time `json:"created"`
+	Updated time.Time `json:"updated"`
+	Deleted time.Time `json:"-"`
 }
 
 func Register(db *sql.DB) error {
@@ -24,15 +28,15 @@ func Register(db *sql.DB) error {
 	if err != nil {
 		return err
 	}
-	_, err = db.Exec(createDeletedIndex)
+	_, err = db.Exec(deletedIndex)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-var createTable = `
-CREATE TABLE IF NOT EXISTS users (
+var createTable = fmt.Sprintf(`
+CREATE TABLE IF NOT EXISTS %s (
 	id VARCHAR(250) PRIMARY KEY,
 	firstName VARCHAR(250),
 	lastName VARCHAR(250),
@@ -40,13 +44,14 @@ CREATE TABLE IF NOT EXISTS users (
 	displayImageURL VARCHAR(250),
 	email VARCHAR(250) UNIQUE NOT NULL,
 	password VARCHAR(250) NOT NULL,
+
 	created TIMESTAMPTZ NOT NULL,
 	updated TIMESTAMPTZ NOT NULL,
 	deleted TIMESTAMPTZ
 );
-`
+`, UsersTable)
 
-var createDeletedIndex = `
+var deletedIndex = `
 CREATE INDEX IF NOT EXISTS users_deleted
 ON users (deleted);
 `

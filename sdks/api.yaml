@@ -6,7 +6,7 @@ tags:
     description: Service for IAM related requests
 info:
   description: This defines the cloud-9-iam API
-  version: 0.0.0-rc2
+  version: 0.0.0-rc4
   title: Cloud 9 IAM API
 paths:
   /user:
@@ -18,10 +18,28 @@ paths:
       responses:
         "200":
           description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
         "400":
           description: Request is malformed
       requestBody:
         $ref: "#/components/requestBodies/CreateUser"
+    get:
+      summary: Fetch the user for the given session
+      tags:
+        - iam
+      operationId: getUser
+      responses:
+        "200":
+          description: User fetched successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: User not found
   /sign-in/with-password:
     post:
       summary: Sign-in using an email and password
@@ -49,6 +67,30 @@ components:
       required:
         - email
         - password
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        displayName:
+          type: string
+        displayImageURL:
+          type: string
+          format: uri
+        email:
+          type: string
+          format: email
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
   requestBodies:
     CreateUser:
       content:

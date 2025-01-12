@@ -10,6 +10,7 @@ git_push.sh
 index.ts
 model/credentials.ts
 model/models.ts
+model/user.ts
 ng-package.json
 package.json
 param.ts

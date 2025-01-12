@@ -32,6 +32,7 @@ func (s *service) CreateJWT(user *usermodel.User) (string, error) {
 }
 
 func addUserToJWTClaims(jwtClaims jwt.MapClaims, user *usermodel.User) jwt.MapClaims {
+	jwtClaims["sub"] = user.ID
 	jwtClaims["displayName"] = user.DisplayName
 	jwtClaims["displayImageURL"] = user.DisplayImageURL
 	return jwtClaims
@@ -44,14 +45,14 @@ func addExpiryToJWTClaims(jwtClaims jwt.MapClaims, jwtDuration time.Duration) jw
 	return jwtClaims
 }
 
-func (s *service) ValidateJWT(jwtString string) error {
+func (s *service) ValidateJWT(jwtString string) (*jwt.Token, error) {
 	jwtToken, err := jwt.Parse(jwtString, func(t *jwt.Token) (interface{}, error) {
 		return s.gcpClientSecret, nil
 	}, jwt.WithExpirationRequired())
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return isJWTExpired(jwtToken)
+	return jwtToken, isJWTExpired(jwtToken)
 }
 
 func isJWTExpired(jwtToken *jwt.Token) error {

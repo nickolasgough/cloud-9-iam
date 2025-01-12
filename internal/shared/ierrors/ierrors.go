@@ -14,6 +14,7 @@ const (
 	BadRequest           = "BadRequest"
 
 	InvalidArgument = "InvalidArgument"
+	NotFound        = "NotFound"
 )
 
 func NewError(errType ErrType, err error) error {
@@ -51,6 +52,8 @@ func ToHttpStatusCode(err error) int {
 		return http.StatusBadRequest
 	case InvalidArgument:
 		return http.StatusInternalServerError
+	case NotFound:
+		return http.StatusNotFound
 	default:
 		return http.StatusInternalServerError
 	}

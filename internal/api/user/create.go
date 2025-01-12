@@ -1,17 +1,18 @@
-package api
+package userapi
 
 import (
 	"context"
 	"errors"
 	"net/http"
 
+	"github.com/nickolasgough/cloud-9-iam/internal/shared/api"
 	"github.com/nickolasgough/cloud-9-iam/internal/shared/ierrors"
 	usermodel "github.com/nickolasgough/cloud-9-iam/internal/user/model"
 	userservice "github.com/nickolasgough/cloud-9-iam/internal/user/service"
 )
 
 type createUserRequest struct {
-	Username string `json:"username"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
@@ -19,7 +20,7 @@ type createUserHandler struct {
 	userService userservice.Service
 }
 
-func NewCreateUserHandler(us userservice.Service) ApiHandler {
+func NewCreateUserHandler(us userservice.Service) api.ApiHandler {
 	return &createUserHandler{
 		userService: us,
 	}
@@ -44,12 +45,11 @@ func (h *createUserHandler) Handle(ctx context.Context, r interface{}) (interfac
 	}
 
 	user := &usermodel.User{
-		DisplayName: req.Username,
-		Password:    req.Password,
+		Email: req.Email,
 	}
-	user, err := h.userService.CreateUser(user)
+	user, err := h.userService.CreateUser(user, req.Password)
 	if err != nil {
 		return "", err
 	}
-	return marshalResponseBody(user)
+	return user, nil
 }

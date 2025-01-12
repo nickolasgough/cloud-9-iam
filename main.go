@@ -5,14 +5,17 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 
 	_ "github.com/lib/pq"
 	"google.golang.org/api/idtoken"
 
-	"github.com/nickolasgough/cloud-9-iam/internal/api"
+	signinapi "github.com/nickolasgough/cloud-9-iam/internal/api/sign-in"
+	userapi "github.com/nickolasgough/cloud-9-iam/internal/api/user"
 	"github.com/nickolasgough/cloud-9-iam/internal/auth"
 	"github.com/nickolasgough/cloud-9-iam/internal/google"
+	"github.com/nickolasgough/cloud-9-iam/internal/shared/api"
 	"github.com/nickolasgough/cloud-9-iam/internal/shared/constants"
 	usermodel "github.com/nickolasgough/cloud-9-iam/internal/user/model"
 	userrepository "github.com/nickolasgough/cloud-9-iam/internal/user/repository"
@@ -53,8 +56,9 @@ func main() {
 	authService := auth.NewService(gcpClientSecret)
 
 	// Initialize the database connection
-	dsn := fmt.Sprintf("host=localhost user=%s password=%s dbname=cloud-9 port=5432 sslmode=disable", psqlUsername, psqlPassword)
-	db, err := sql.Open("postgres", dsn)
+	psqlInfo := fmt.Sprintf("postgresql://localhost:5432/cloud-9?user=%s&password=%s&sslmode=disable", url.QueryEscape(psqlUsername), url.QueryEscape(psqlPassword))
+	fmt.Printf("Info: %s\n", psqlInfo)
+	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
 		fmt.Printf("Failed to open database with: %s\n", err)
 		os.Exit(1)
@@ -64,6 +68,7 @@ func main() {
 		fmt.Printf("Failed to connect to database with: %s\n", err)
 		os.Exit(1)
 	}
+	defer db.Close()
 
 	// Register internal models
 	err = usermodel.Register(db)
@@ -76,16 +81,17 @@ func main() {
 	userRepository := userrepository.NewRepository(db)
 	userService := userservice.NewService(userRepository)
 
-	// Register internal API endpoints
-	handlers := []*api.ApiEndpoint{
-		api.NewApiEndpoint(api.NewCreateUserHandler(userService)),
-	}
-	for _, handler := range handlers {
-		mux.Handle(handler.Path(), handler)
-	}
+	// Register public API endpoints
+	mux.HandleFunc("/sign-in/with-google", signinapi.SignInWithGoogle(ctx, gcpClientSecret, googleService, authService))
+	mux.HandleFunc("/sign-in/with-password", signinapi.SignInWithPassword(ctx, userService, authService))
 
-	// Register external API endpoints
-	mux.HandleFunc("/sign-in/with-google", api.SignInWithGoogle(ctx, gcpClientSecret, googleService, authService))
+	// Register private API endpoints
+	handlers := []api.ApiHandler{
+		userapi.NewCreateUserHandler(userService),
+	}
+	for _, h := range handlers {
+		mux.HandleFunc(h.Path(), api.ServeHTTP(authService, h))
+	}
 
 	fmt.Printf("Server listening on port %d\n", PORT)
 	err = http.ListenAndServe(fmt.Sprintf(":%d", PORT), mux)

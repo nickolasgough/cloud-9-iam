@@ -5,5 +5,7 @@ import (
 )
 
 type Repository interface {
-	CreateUser(user *usermodel.User) (*usermodel.User, error)
+	CreateUser(*usermodel.User, string) (*usermodel.User, error)
+	GetUser(string) (*usermodel.User, error)
+	GetUserAndPasswordByEmail(string) (*usermodel.User, string, error)
 }
